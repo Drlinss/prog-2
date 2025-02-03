@@ -1,0 +1,123 @@
+Darlin Adriel 2023-1738
+
+
+// Ejercicio 1: Aplicando KISS (Keep It Simple, Stupid)
+using System;
+using System.Linq;
+
+class Restaurante
+{
+    static void Main()
+    {
+        Console.Write("Ingrese los precios de los platos (separados por comas): ");
+        var precios = Console.ReadLine().Split(',').Select(decimal.Parse).ToList();
+        decimal total = precios.Sum();
+        
+        Console.Write("¿Desea agregar una propina personalizada? (s/n): ");
+        decimal propina = Console.ReadLine().ToLower() == "s" ? decimal.Parse(Console.ReadLine()) : total * 0.10m;
+        
+        Console.WriteLine($"Total a pagar (con propina): {total + propina}");
+    }
+}
+
+// Ejercicio 2: Aplicando DRY (Don't Repeat Yourself)
+using System;
+
+class Empresa
+{
+    static decimal CalcularSalario(decimal baseSalario)
+    {
+        return baseSalario * 0.87m; // Aplica impuestos y bono en un solo cálculo reutilizable
+    }
+    
+    static void Main()
+    {
+        Console.Write("Seleccione el tipo de empleado (1: Tiempo completo, 2: Medio tiempo): ");
+        int tipo = int.Parse(Console.ReadLine());
+        decimal salario = tipo == 1 ? CalcularSalario(decimal.Parse(Console.ReadLine())) : CalcularSalario(decimal.Parse(Console.ReadLine()) * decimal.Parse(Console.ReadLine()));
+        Console.WriteLine($"Salario neto después de impuestos y bono: {salario}");
+    }
+}
+
+// Ejercicio 3: Aplicando YAGNI (You Aren't Gonna Need It)
+using System;
+using System.Collections.Generic;
+
+class GestionProductos
+{
+    static List<(int, string, decimal)> productos = new List<(int, string, decimal)>();
+    static int idCounter = 1;
+    
+    static void Main()
+    {
+        Console.WriteLine("1. Agregar producto\n2. Eliminar producto");
+        int opcion = int.Parse(Console.ReadLine());
+        
+        if (opcion == 1)
+        {
+            Console.Write("Ingrese el nombre del producto: ");
+            string nombre = Console.ReadLine();
+            Console.Write("Ingrese el precio: ");
+            decimal precio = decimal.Parse(Console.ReadLine());
+            productos.Add((idCounter++, nombre, precio));
+            Console.WriteLine($"Producto '{nombre}' agregado con éxito.");
+        }
+        else if (opcion == 2)
+        {
+            Console.Write("Ingrese el ID del producto a eliminar: ");
+            int id = int.Parse(Console.ReadLine());
+            productos.RemoveAll(p => p.Item1 == id);
+            Console.WriteLine("Producto eliminado.");
+        }
+    }
+}
+
+// Ejercicio 4: Aplicando SOLID - SRP
+using System;
+
+interface INotificacion
+{
+    void Enviar(string mensaje);
+}
+
+class Email : INotificacion
+{
+    public void Enviar(string mensaje)
+    {
+        Console.WriteLine($"Enviando Email: {mensaje}");
+    }
+}
+
+class SMS : INotificacion
+{
+    public void Enviar(string mensaje)
+    {
+        Console.WriteLine($"Enviando SMS: {mensaje}");
+    }
+}
+
+class Logger
+{
+    public void Registrar(string mensaje)
+    {
+        Console.WriteLine($"Notificación registrada en logs: {mensaje}");
+    }
+}
+
+class NotificacionService
+{
+    static void Main()
+    {
+        Console.WriteLine("Seleccione el tipo de notificación: 1. Email  2. SMS");
+        int opcion = int.Parse(Console.ReadLine());
+        Console.Write("Ingrese el mensaje: ");
+        string mensaje = Console.ReadLine();
+        
+        INotificacion notificacion = opcion == 1 ? new Email() : new SMS();
+        notificacion.Enviar(mensaje);
+        new Logger().Registrar(mensaje);
+    }
+}
+
+
+
